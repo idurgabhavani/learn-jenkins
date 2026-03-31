@@ -1,5 +1,9 @@
 pipeline{
-    agent any
+    agent {
+        node {
+            label 'agent-1'
+        }
+    }
 
     stages{
         stage('Build') {
@@ -19,5 +23,19 @@ pipeline{
             }
         }
         
+    }
+}
+
+// post build
+
+post {
+    always {
+        echo 'it will always say hello again'
+    }
+    failure {
+        echo ' it will run when pipline is failed, used generally to send alrets '
+    }
+    success{
+        echo ' ur pipe is success'
     }
 }
