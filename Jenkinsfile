@@ -9,7 +9,7 @@ pipeline{
         GREETING = 'hello jenkins'
     }
     options {
-       // timeout(time: 1, unit: 'SECONDS')
+        timeout(time: 1, unit: 'SECONDS')
         disableConcurrentBuild()  // this will stops if again and again building the same pipelins
     }
 
