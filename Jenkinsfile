@@ -5,6 +5,14 @@ pipeline{
         }
     }
 
+    environment {
+        GREETING = 'hello jenkins'
+    }
+    options {
+       // timeout(time: 1, unit: 'SECONDS')
+        disableConcurrentBuild()  // this will stops if again and again building the same pipelins
+    }
+
     stages{
         stage('Build') {
             steps {
@@ -19,7 +27,18 @@ pipeline{
         }
         stage('Deploy') {
             steps {
-                echo 'building'
+                steps {
+                    sh """
+
+                    echo " hello this is shell script"
+                    echo "$GREETING"
+                    sleep 10
+
+                    """
+
+
+                }
+                
             }
         }
         
