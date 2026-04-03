@@ -1,38 +1,52 @@
 pipeline{
-    agent {
-        node {
-            label 'agent-1'
-        }
-    }
+    agent any
+    // {
+    //     node {
+    //         label 'agent-1'
+    //     }
+    // }
 
-    environment {
-        GREETING = 'hello jenkins'
-    }
+    // environment {
+    //     GREETING = 'hello jenkins'
+    // }
     // options {
     //     timeout(time: 1, unit: 'SECONDS')
     //     disableConcurrentBuild()  // this will stops if again and again building the same pipelins
     // }
 
     stages{
-        stage('Build') {
+        stage('Init') {
             steps {
-                echo 'building'
+                sh """
+
+                cd 01-vpc
+                terrraform init -reconfigure
+
+                """
             }
 
         } 
-        stage('Test') {
+        stage('Plan') {
             steps {
-                echo 'Testing..'
+                sh """
+
+                cd 01-vpc
+                terrraform plan
+
+                """
             }
         }
         stage('Deploy') {
+            input {
+                message "Should we continue"
+                ok "yes ,we should "
+            }
             steps {
                 steps {
                     sh """
 
-                    echo " hello this is shell script"
-                    echo "$GREETING"
-                    sleep 10
+                    cd 01-vpc
+                    terraform apply -auto-approve
 
                     """
 
@@ -47,14 +61,14 @@ pipeline{
 
 // post build
 
-post {
-    always {
-        echo 'it will always say hello again'
-    }
-    failure {
-        echo ' it will run when pipline is failed, used generally to send alrets '
-    }
-    success{
-        echo ' ur pipe is success'
-    }
-}
+// post {
+//     always {
+//         echo 'it will always say hello again'
+//     }
+//     failure {
+//         echo ' it will run when pipline is failed, used generally to send alrets '
+//     }
+//     success{
+//         echo ' ur pipe is success'
+//     }
+// }
